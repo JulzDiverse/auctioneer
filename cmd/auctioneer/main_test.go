@@ -79,6 +79,7 @@ var _ = Describe("Auctioneer", func() {
 			LockRetryInterval: durationjson.Duration(time.Second),
 			ConsulCluster:     consulRunner.ConsulCluster(),
 			UUID:              "auctioneer-boshy-bosh",
+			AuctionType:       "default",
 		}
 		auctioneerClient = auctioneer.NewClient("http://" + auctioneerLocation)
 	})

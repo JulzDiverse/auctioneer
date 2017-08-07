@@ -200,6 +200,11 @@ func initializeAuctionRunner(logger lager.Logger, cfg config.AuctioneerConfig, b
 		logger.Fatal("failed-to-construct-auction-runner-workpool", err, lager.Data{"num-workers": cfg.AuctionRunnerWorkers}) // should never happen
 	}
 
+	auctionType, err := getAuctionType(cfg.AuctionType)
+	if err != nil {
+		logger.Fatal("auction-type-does-not-exist", err)
+	}
+
 	return auctionrunner.New(
 		logger,
 		delegate,
@@ -208,7 +213,16 @@ func initializeAuctionRunner(logger lager.Logger, cfg config.AuctioneerConfig, b
 		workPool,
 		cfg.StartingContainerWeight,
 		cfg.StartingContainerCountMaximum,
+		auctionType,
 	)
+}
+
+func getAuctionType(auctionType string) (*auctionrunner.AuctionType, error) {
+	switch auctionType {
+	case "default":
+		return auctionrunner.NewAuctionType(auctionrunner.DefaultAuction), nil
+	}
+	return nil, errors.New("Auction Type: " + auctionType + " does not exist")
 }
 
 func initializeMetron(logger lager.Logger, cfg config.AuctioneerConfig) (loggregator_v2.IngressClient, error) {
