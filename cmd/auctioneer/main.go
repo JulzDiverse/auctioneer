@@ -222,6 +222,8 @@ func getAuctionType(auctionType string) (*auctionrunner.AuctionType, error) {
 	switch auctionType {
 	case "default":
 		return auctionrunner.NewAuctionType(auctionrunner.DefaultAuction), nil
+	case "bestfit":
+		return auctionrunner.NewAuctionType(auctionrunner.BestFitFashion), nil
 	}
 	return nil, errors.New("Auction Type: " + auctionType + " does not exist")
 }
