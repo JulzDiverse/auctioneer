@@ -201,7 +201,7 @@ func initializeAuctionRunner(logger lager.Logger, cfg config.AuctioneerConfig, b
 		logger.Fatal("failed-to-construct-auction-runner-workpool", err, lager.Data{"num-workers": cfg.AuctionRunnerWorkers}) // should never happen
 	}
 
-	auctionType, err := getAuctionType(cfg.AuctionType)
+	auctionType, err := useAuctionType(cfg.AuctionType)
 	if err != nil {
 		logger.Fatal("auction-type-does-not-exist", err)
 	}
@@ -218,12 +218,12 @@ func initializeAuctionRunner(logger lager.Logger, cfg config.AuctioneerConfig, b
 	)
 }
 
-func getAuctionType(auctionType string) (*auctionrunner.AuctionType, error) {
+func useAuctionType(auctionType string) (*auctionrunner.AuctionType, error) {
 	switch auctionType {
 	case "default":
 		return auctionrunner.NewAuctionType(auctionrunner.DefaultAuction), nil
 	case "bestfit":
-		return auctionrunner.NewAuctionType(auctionrunner.BestFitFashion), nil
+		return auctionrunner.NewAuctionType(auctionrunner.BestFit), nil
 	}
 	return nil, errors.New("Auction Type: " + auctionType + " does not exist")
 }
